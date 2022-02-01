@@ -1,0 +1,1 @@
+<img src="{{url($image != null ? $image : url('https://ui-avatars.com/api/?rounded=true&bold=true&name=julius + Kanyenye'))}}" width="120px" alt="">
