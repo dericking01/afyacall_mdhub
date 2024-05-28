@@ -12,6 +12,7 @@ use App\Http\Requests\Admin\StoreUsersRequest;
 use App\Http\Requests\Admin\UpdateUsersRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UsersController extends Controller
 {
@@ -156,7 +157,8 @@ class UsersController extends Controller
         if ($request->status == 0) {
             try {
                 $client = new \GuzzleHttp\Client();
-                $client->request('GET', 'http://192.168.1.4/afyacall.php', [
+		$client->request('GET', 'http://192.168.1.41/afyacall.php', [
+			 'verify' => false,
                     'query' => [
                         'phone' => $number,
                         'status' => 1,
@@ -171,13 +173,15 @@ class UsersController extends Controller
                 $this->sendnotification($number);
 
                 return response()->json('success 0');
-            } catch (\Throwable $th) {
+	    } catch (\Throwable $th) {
+		     Log::error($th->getMessage());
                 return response()->json($th->getMessage());
             }
         } else if ($request->status == 1) {
             try {
                 $client = new \GuzzleHttp\Client();
-                $client->request('GET', 'http://192.168.1.4/afyacall.php', [
+		$client->request('GET', 'http://192.168.1.41/afyacall.php', [
+			 'verify' => false,
                     'query' => [
                         'phone' => $number,
                         'status' => 0,
@@ -192,7 +196,8 @@ class UsersController extends Controller
                 $this->sendnotification($number);
 
                 return response()->json('success 1');
-            } catch (\Throwable $th) {
+	    } catch (\Throwable $th) {
+		     Log::error($th->getMessage());
             }
         }
     }
@@ -205,7 +210,7 @@ class UsersController extends Controller
         if ($request->status == 0) {
             try {
                 $client = new \GuzzleHttp\Client();
-                $client->request('GET', 'http://192.168.1.4/afyacall.php', [
+                $client->request('GET', 'http://192.168.1.41/afyacall.php', [
                     'query' => [
                         'phone' => $number,
                         'status' => 1,
@@ -225,7 +230,7 @@ class UsersController extends Controller
         } else if ($request->status == 1) {
             try {
                 $client = new \GuzzleHttp\Client();
-                $client->request('GET', 'http://192.168.1.4/afyacall.php', [
+                $client->request('GET', 'http://192.168.1.41/afyacall.php', [
                     'query' => [
                         'phone' => $number,
                         'status' => 0,
@@ -255,7 +260,8 @@ class UsersController extends Controller
             $smsHelper->sendSms($contactfilter, $messagesent);
             return true;
         } catch (\Throwable $th) {
-            //throw $th;
+		//throw $th;
+	     Log::error($th->getMessage());
             return false;
         }
     }

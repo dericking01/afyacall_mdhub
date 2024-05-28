@@ -173,17 +173,8 @@
                                 <br>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="form-group-custom">
-                                            <select class="form-control select2" id="cheif_complaint"
-                                                name="cheif_complaint[]" multiple="multiple">
-                                                <option value="not set">Select chief complaints</option>
-                                                @foreach ($chiefComplaints as $chiefComplaint)
-                                                    <option value="{{ $chiefComplaint->id }}">
-                                                        {{ $chiefComplaint->name }}
-                                                    </option>
-                                                @endforeach
-
-                                            </select>
+					<div class="form-group-custom">
+ 					    <input type="text" id="cheif_complaint" name="cheif_complaint" autocomplete="off" />
                                             <label class="control-label">Chief Complaints</label><i
                                                 class="bar"></i>
                                         </div>
@@ -193,7 +184,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group-custom">
-                                            <input type="text" id="hist_pres_ill" name="hist_pres_ill" />
+                                            <input type="text" id="hist_pres_ill" name="hist_pres_ill" autocomplete="off" />
                                             <label class="control-label">History of Presenting Illness </label><i
                                                 class="bar"></i>
                                         </div>
@@ -302,16 +293,8 @@
                                 <br>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="form-group-custom">
-                                            <select class="form-control select2" id="prov_diagnos" name="prov_diagnos[]"
-                                                multiple="multiple">
-                                                <option>Select provisional diagnosis</option>
-                                                @foreach ($symptoms as $symptom)
-                                                    <option value="{{ $symptom->id }}">{{ $symptom->symptoms_name }}
-                                                    </option>
-                                                @endforeach
-
-                                            </select>
+					<div class="form-group-custom">
+					    <input type="text" name="prov_diagnos" autocomplete="off" />
                                             <label class="control-label">Provisional Diagnosis</label><i
                                                 class="bar"></i>
                                         </div>
@@ -340,7 +323,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group-custom">
-                                        <input type="text" name="referral" />
+                                        <input type="text" name="referral"  />
                                         <label class="control-label">Referral</label><i class="bar"></i>
                                     </div>
 
@@ -424,15 +407,6 @@
 
             $("#dangersign").select2({});
 
-            $("#cheif_complaint").select2({
-                tags: true,
-                tokenSeparators: [',', ' ']
-            });
-
-            $("#prov_diagnos").select2({
-                tags: true,
-                tokenSeparators: [',', ' ']
-            });
 
             // Select patient
             $("#patientSelected").select2({

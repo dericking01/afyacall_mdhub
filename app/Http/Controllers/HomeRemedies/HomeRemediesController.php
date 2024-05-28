@@ -75,16 +75,14 @@ class HomeRemediesController extends Controller
        $remedies->counc_advice = $request->counc_advice;
        $remedies->other_plans = $request->other_plans;
        $remedies->dd = $request->dd;
+       $remedies->cheif_complaint = $request->cheif_complaint;
+       $remedies->prov_diagnos = $request->prov_diagnos;
        $remedies->conclusion = $request->conclusion;
        $remedies->medication_status = $request->medication_status;
        $remedies->medication_name = $request->medication_name;
        $remedies->dangersign = $request->dangersign;
        $remedies->save();
 
-       $remedies->chiefcomplaints()->attach($request->cheif_complaint);
-       $remedies->symptoms()->attach($request->prov_diagnos);
-
-       
 
        try {
             $patient = Patient::find($request->patient_id);
@@ -127,5 +125,48 @@ class HomeRemediesController extends Controller
         $patient = Patient::find($id);
         return redirect()->route('admin.home.remedies.create')
                          ->with('has_patient',$patient);
+    }
+
+
+     public function edit($id)
+    {
+
+        $patients = Patient::with('region', 'district')->get();
+        $prescriptions = Prescription::with('patient')
+            ->findOrFail($id);
+
+    //    return $prescriptions;
+        return view('home_remedies.edit', compact('prescriptions','patients'))->with('has_patient', $patients);
+    }
+
+    public function update_remedies(Request $request, $id){
+
+        $request->validate([
+            'patient_id' => 'required'
+        ]);
+        $remedies = Prescription::find($id);
+        $remedies->patient_id = $request->patient_id;
+        $remedies->user_id = Auth::id();
+        $remedies->callers = $request->callers;
+        $remedies->hist_pres_ill = $request->hist_pres_ill;
+        $remedies->surgeries = $request->surgeries;
+        $remedies->sugreries_reaction = $request->sugreries_reaction;
+        $remedies->lastdatemens = $request->lastdatemens;
+        $remedies->number_pregnance = $request->number_pregnance;
+        $remedies->number_live_birth = $request->number_live_birth;
+        $remedies->preg_complication = $request->preg_complication;
+        $remedies->referral = $request->referral;
+        $remedies->counc_advice = $request->counc_advice;
+        $remedies->other_plans = $request->other_plans;
+        $remedies->dd = $request->dd;
+        $remedies->cheif_complaint = $request->cheif_complaint;
+        $remedies->prov_diagnos = $request->prov_diagnos;
+        $remedies->conclusion = $request->conclusion;
+        $remedies->medication_status = $request->medication_status;
+        $remedies->medication_name = $request->medication_name;
+        $remedies->dangersign = $request->dangersign;
+        $remedies->save();
+
+        return redirect()->route('admin.home.remedies')->with('success', 'consultation edited successfull');
     }
 }

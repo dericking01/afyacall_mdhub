@@ -8,7 +8,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 Route::group(['middleware' => 'checkHeader', 'namespace' => 'API'], function () {
     
     Route::namespace('Doctor')->group(function () {
-        Route::get('/doctors', 'ActiveDoctorsController@index');
+	    Route::get('/doctors', 'ActiveDoctorsController@index');
+	        Route::get('/getdoctorlists', 'ActiveDoctorsController@getdoctorlists');
     });
 
     Route::namespace('Schedule')->group(function () {

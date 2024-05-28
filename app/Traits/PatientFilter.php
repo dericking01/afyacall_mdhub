@@ -12,7 +12,7 @@ trait PatientFilter
     public function filteredPatient(Request $request)
     {
         $patient = Patient::query();
-        $paginate = 10;
+        $paginate = 1000;
 
         if ($request->query('paginate') != '') {
             $paginate = $request->query('paginate');

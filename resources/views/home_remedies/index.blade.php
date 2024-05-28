@@ -11,7 +11,6 @@
 
 
 @section('content')
-
     <div class="col-12">
         <div class="card">
             <div class="card-header card-header-icon">
@@ -20,22 +19,27 @@
             <div class="card-content">
                 <h4 class="card-title">All Consultations</h4>
             </div>
+            @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
             <table class="table table-striped" id="datatable">
                 <thead>
                     <tr>
                         <th width="5px">Cons #No</th>
-                        <th width="60px">Date</th>
+                        <th>Date</th>
                         <th>Patient</th>
                         <th>Doctor</th>
-                        <th width="10px">
-                        </th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($prescriptions as $key => $prescription)
                         <tr data-entry-id="{{ $prescription->id }}">
                             <td>
-                                 {{$prescription->id ?? '' }}
+                                {{ $prescription->id ?? '' }}
                             </td>
 
                             <td>
@@ -64,6 +68,13 @@
                                     href="{{ route('admin.home.remedies.view', $prescription->id) }}">
                                     View
                                 </a>
+
+                                @if (auth()->user()->id == $prescription->user_id)
+                                <a href="{{ route('admin.home.remedies.edit', $prescription->id) }}" class="btn btn-primary"><i
+                                    class="ti-pencil-alt"></i></a>
+
+                                @endif
+
                             </td>
 
                         </tr>
@@ -79,15 +90,17 @@
     <script>
         $(document).ready(function() {
             $('#datatable').DataTable({
+                'pageLength': 25,
                 order: [
                     [0, "desc"]
                 ],
                 buttons: [
-                'csv', 'excel', 'pdf'
-            ]
+                    'csv', 'excel', 'pdf'
+                ]
             });
             $('.buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
 
         });
     </script>
 @endsection
+

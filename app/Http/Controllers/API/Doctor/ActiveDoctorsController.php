@@ -23,4 +23,13 @@ class ActiveDoctorsController extends Controller
         $doctors_offline =  User::select('id','phone')->where('status','1')->get();
         return response()->json(['online_doctors' => $doctors_online,'offline_doctor'=>$doctors_offline]);
     }
+
+        public function getdoctorlists()
+    {
+        $doctors = Doctor::with('user', 'region', 'district', 'patients')
+            ->withCount('patients')
+            ->orderBy('id', 'desc')->get();
+        return response()->json($doctors);
+
+    }
 }

@@ -46,16 +46,17 @@
                             <td>
                                 {{ $doctor->id ?? '' }}
                             </td>
+
                             <td>
-                                <img src="{{ asset('dashboard/images/image_placeholder.jpg') }}" class="img-responsive"
-                                    width="120px" alt="">
+                                    <img width="80px"
+                                    src="https://ui-avatars.com/api/?rounded=true&bold=true&background=aace3a&color=fff&name= {{ $doctor->firstname }} +  {{ $doctor->lastname }}">
                             </td>
                             <td>
                                 <p>
                                     Name : DR. {{ $doctor->firstname ?? '' }} {{ $doctor->lastname ?? '' }} <br>
-                                    Gender : {{ $doctor->gender ?? '' }} <br>
-                                    Medical School : {{ $doctor->health_facility ?? '' }} <br>
-                                    Health Facility : {{ $doctor->medicalSchool ?? '' }} <br>
+				    Gender : {{ $doctor->gender ?? '' }} <br>
+                                    Medical School : {{ $doctor->medicalSchool ?? '' }} <br>
+                                    Health Facility : {{ $doctor->health_facility ?? '' }} <br>
                                     Section : {{ $doctor->section ?? '' }} <br>
                                 </p>
                             </td>

@@ -68,6 +68,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::get('consultation', 'HomeRemedies\HomeRemediesController@index')->name('home.remedies');
     Route::get('consultation/page', 'HomeRemedies\HomeRemediesController@create')->name('home.remedies.create');
     Route::get('consultation/view/{id}', 'HomeRemedies\HomeRemediesController@view')->name('home.remedies.view');
+        Route::get('consultation/edit/{id}', 'HomeRemedies\HomeRemediesController@edit')->name('home.remedies.edit');
+    Route::patch('consultation/update/{id}', 'HomeRemedies\HomeRemediesController@update_remedies')->name('home.update_remedies');
     Route::get('consultation/consulte-patient-now/{id}', 'HomeRemedies\HomeRemediesController@remedies_patient_now')->name('home.remedies.remedies_patient_now');
     Route::post('consultation/create-patient', 'HomeRemedies\HomeRemediesController@create_patient')->name('home.create_patient');
     Route::post('consultation/patient-data', 'HomeRemedies\HomeRemediesController@patient_data')->name('home.patient_data');

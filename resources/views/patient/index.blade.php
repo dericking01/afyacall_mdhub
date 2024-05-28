@@ -90,13 +90,13 @@
         $(document).ready(function() {
             $('#datatable').DataTable({
 
+	     'pageLength': 25,
             });
 
         });
     </script>
     <script type="text/javascript">
         function deleteData(id) {
-            console.log("value of id ", id)
             var id = id;
             var url = '{{ route('admin.patients.destroy', ':id') }}';
             url = url.replace(':id', id);

@@ -44,13 +44,13 @@
                     {{ $call->call_date ?? '' }}
                 </td>
                 <td>
-                    {{ $call->call_number ?? '' }}
+                    {{ $call->caller_number ?? '' }}
                 </td>
                 <td>
-                    {{ $call->doctor['phone'] ?? '' }}
+                    {{ $call->user['phone'] ?? '' }}
                 </td>
                 <td>
-                   Dr.  {{ $call->doctor_id ?? '' }} 
+                   Dr. {{ $call->user['name'] ?? '' }}
                 </td>
                 <td>
                     {{ $call->call_duration ?? '' }}
@@ -87,7 +87,8 @@
    <script>
         $(document).ready( function () {
                 $('#cdrtable').DataTable({
-                    dom: 'Bfrtip',
+		dom: 'Bfrtip',
+			 'pageLength': 25,
                     order: [[ 0, "desc" ]],
                     buttons: [
                         {
@@ -104,4 +105,5 @@
           });
     </script>
 @endsection
+
 

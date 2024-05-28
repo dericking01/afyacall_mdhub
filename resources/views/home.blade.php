@@ -62,7 +62,7 @@
                 <div class="widget-panel widget-style-2 bg-white">
                     <i class="fa fa-users -directory text-info"></i>
                     <h2 id="patient_latest" class="m-0 text-dark counter font-600">
-                        0
+                          {{$seven_patient}} 
                     </h2>
                     <div class="text-muted m-t-5"> New Patient Last 7 Days</div>
                 </div>

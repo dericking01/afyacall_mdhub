@@ -16,6 +16,7 @@
         "maatwebsite/excel": "^3.1",
         "predis/predis": "^1.1",
         "samuelterra22/laravel-report-generator": "^5.2",
+        "spatie/laravel-backup": "^6.16",
         "spatie/laravel-permission": "^3.0",
         "tymon/jwt-auth": "1.0.0-rc.5",
         "waavi/sanitizer": "~1.0",

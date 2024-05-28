@@ -49,7 +49,7 @@ class SmsHelper
                 'query' => [
                     'username' => 'afya',
                     'password' => 'Afya4017',
-                    'from' => '15723',
+		    'from' => 'AFYACALL',
                     'to' => $number,
                     'text' => $message,
                 ]

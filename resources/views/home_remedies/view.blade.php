@@ -40,18 +40,13 @@
                                             <h6>Chief Complaint </h6>
                                         </dt>
                                         <dd class="col-md-6">
-
-                                            @foreach ($prescriptions->chiefcomplaints()->pluck('name') as $prescription)
-                                                <span class="badge badge-info">{{ $prescription }}</span>
-                                            @endforeach
+					  <h6>{{ $prescriptions->cheif_complaint }}</h6>
                                         </dd>
                                         <dt class="col-md-6">
                                             <h6>Provisional Diagnosis</h6>
                                         </dt>
-                                        <dd class="col-md-6">
-                                            @foreach ($prescriptions->symptoms()->pluck('symptoms_name') as $prescription)
-                                                <span class="badge badge-info">{{ $prescription }}</span>
-                                            @endforeach
+					<dd class="col-md-6">
+ 					   <h6>{{ $prescriptions->prov_diagnos }}</h6>
                                         </dd>
                                         <dt class="col-md-6">
                                             <h6>Differential Diagnosis</h6>
