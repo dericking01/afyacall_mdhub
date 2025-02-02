@@ -1,0 +1,64 @@
+services:
+  # Application service
+  afyacall_doctor:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    container_name: afyacall-doctor
+    working_dir: /var/www/html
+    image: twiga.afyacall.co.tz:5000/afyacall_doctor:1.0.1
+    volumes:
+      - vendor_data:/var/www/html/vendor
+      - ./:/var/www/html
+    environment:
+      APP_NAME: ${APP_NAME:-AfyaCall}
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_URL: ${APP_URL:-https://twiga.afyacall.co.tz}
+      LOG_CHANNEL: ${LOG_CHANNEL:-stack}
+      DB_CONNECTION: ${DB_CONNECTION:-mysql}
+      DB_HOST: ${DB_HOST:-192.168.1.11}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_DATABASE: ${DB_DATABASE:-afyacalltestdb}
+      DB_USERNAME: ${DB_USERNAME:-rm_db}
+      DB_PASSWORD: ${DB_PASSWORD}
+      BROADCAST_DRIVER: ${BROADCAST_DRIVER:-log}
+      CACHE_DRIVER: ${CACHE_DRIVER:-file}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-sync}
+      SESSION_DRIVER: ${SESSION_DRIVER:-file}
+      SESSION_LIFETIME: ${SESSION_LIFETIME:-30}
+      REDIS_HOST: ${REDIS_HOST:-localhost}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+    networks:
+      - afyacall_doctor_network
+
+  # Nginx service with SSL
+  nginx:
+    platform: linux/amd64
+    image: twiga.afyacall.co.tz:5000/afycall_core_nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    container_name: core_nginx
+    ports:
+      - "5672:443"   # SSL port, 5672
+    volumes:
+      - ./:/var/www/html
+      - vendor_data:/var/www/html/vendor
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/certs/twiga.afyacall.co.tz.crt:/etc/nginx/ssl/twiga.afyacall.co.tz.crt
+      - ./docker/certs/twiga.afyacall.co.tz.key:/etc/nginx/ssl/twiga.afyacall.co.tz.key
+      - ./logs/access.log:/var/log/access_log
+    depends_on:
+      - afyacall_doctor
+    networks:
+      - afyacall_doctor_network
+
+networks:
+  afyacall_doctor_network:
+    driver: bridge
+
+volumes:
+  vendor_data:
