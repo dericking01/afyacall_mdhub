@@ -58,6 +58,7 @@ class DoctorController extends Controller
             'password' => 'required',
             'roles' => 'required',
         ]);
+        // dd('here');
 
         $user = new User;
         $user->name = $request->firstname . " " . $request->lastname;
