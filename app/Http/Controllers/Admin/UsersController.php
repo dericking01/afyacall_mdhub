@@ -150,57 +150,60 @@ class UsersController extends Controller
 
     public function userChangeStatus(Request $request)
     {
-
         $user = User::find(Auth::id());
+        Log::info("User changing status:", json_decode(json_encode($user), true));
+
         $number = $user->phone;
         $doctor_id = $user->id;
-        if ($request->status == 0) {
-            try {
-                $client = new \GuzzleHttp\Client();
-		$client->request('GET', 'http://192.168.1.41/afyacall.php', [
-			 'verify' => false,
-                    'query' => [
-                        'phone' => $number,
-                        'status' => 1,
-                        'doctor_id' => $doctor_id
+        $newStatus = $request->status; // 0 or 1
+        $apiStatus = $newStatus == 0 ? 1 : 0; // API expects the inverse
+        $expectedResponse = $newStatus == 0 ? 'Sucessfully Added' : 'Sucessfully Removed';
 
-                    ]
-                ]);
-                //update user status
-                $user->status = 0;
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', 'http://192.168.1.49:80/afyacall.php', [
+                'verify' => false,
+                'query' => [
+                    'phone' => $number,
+                    'status' => $apiStatus,
+                    'doctor_id' => $doctor_id
+                ]
+            ]);
+
+            $responseBody = trim($response->getBody()->getContents());
+            Log::info("AFYACALL API RESPONSE:", json_decode(json_encode([
+                'phone' => $number,
+                'status_sent_to_api' => $apiStatus,
+                'expected_response' => $expectedResponse,
+                'api_response' => $responseBody
+            ]), true));
+
+            if ($responseBody === $expectedResponse) {
+                $user->status = $newStatus;
                 $user->save();
 
                 $this->sendnotification($number);
 
-                return response()->json('success 0');
-	    } catch (\Throwable $th) {
-		     Log::error($th->getMessage());
-                return response()->json($th->getMessage());
+                return response()->json("success {$newStatus}");
+            } else {
+                Log::warning("AFYACALL API RESPONSE MISMATCH:", json_decode(json_encode([
+                    'expected' => $expectedResponse,
+                    'received' => $responseBody,
+                    'user_id' => $user->id
+                ]), true));
+                return response()->json("API response mismatch. Status not updated.", 422);
             }
-        } else if ($request->status == 1) {
-            try {
-                $client = new \GuzzleHttp\Client();
-		$client->request('GET', 'http://192.168.1.41/afyacall.php', [
-			 'verify' => false,
-                    'query' => [
-                        'phone' => $number,
-                        'status' => 0,
-                        'doctor_id' => $doctor_id
-                    ]
-                ]);
 
-                //update user status
-                $user->status = 1;
-                $user->save();
-
-                $this->sendnotification($number);
-
-                return response()->json('success 1');
-	    } catch (\Throwable $th) {
-		     Log::error($th->getMessage());
-            }
+        } catch (\Throwable $th) {
+            Log::error("AFYACALL API ERROR:", json_decode(json_encode([
+                'message' => $th->getMessage(),
+                'user_id' => $user->id,
+                'doctor_id' => $doctor_id
+            ]), true));
+            return response()->json("API error: " . $th->getMessage(), 500);
         }
     }
+
 
     public function adminChangeStatus(Request $request)
     {
@@ -210,13 +213,17 @@ class UsersController extends Controller
         if ($request->status == 0) {
             try {
                 $client = new \GuzzleHttp\Client();
-                $client->request('GET', 'http://192.168.1.41/afyacall.php', [
+                $response = $client->request('POST', 'http://192.168.1.49:80/afyacall.php', [
                     'query' => [
                         'phone' => $number,
                         'status' => 1,
                         'doctor_id' => $doctor_id,
                     ]
                 ]);
+
+                $responseBody = $response->getBody()->getContents();
+                Log::info("AFYACALL API RESPONSE for {$number}: " . $responseBody);
+            
                 //update user status
                 $user->status = 0;
                 $user->save();
@@ -230,13 +237,18 @@ class UsersController extends Controller
         } else if ($request->status == 1) {
             try {
                 $client = new \GuzzleHttp\Client();
-                $client->request('GET', 'http://192.168.1.41/afyacall.php', [
+                $response = $client->request('POST', 'http://192.168.1.49:80/afyacall.php', [
+
                     'query' => [
                         'phone' => $number,
                         'status' => 0,
                         'doctor_id' => $doctor_id,
                     ]
                 ]);
+
+                $responseBody = $response->getBody()->getContents();
+                Log::info("AFYACALL API RESPONSE for {$number}: " . $responseBody);
+                
                 //update user status
                 $user->status = 1;
                 $user->save();

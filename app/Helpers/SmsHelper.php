@@ -45,11 +45,11 @@ class SmsHelper
     {
         try {
             $client = new \GuzzleHttp\Client();
-            $client->request('GET', 'http://192.168.1.10:6013/cgi-bin/sendsms', [
+            $client->request('GET', 'http://192.168.1.200:6013/cgi-bin/sendsms', [
                 'query' => [
                     'username' => 'afya',
                     'password' => 'Afya4017',
-		    'from' => 'AFYACALL',
+		            'from' => 'AFYACALL',
                     'to' => $number,
                     'text' => $message,
                 ]
