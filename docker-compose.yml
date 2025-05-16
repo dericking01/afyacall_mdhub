@@ -1,5 +1,4 @@
 services:
-  # Application service
   afyacall_doctor:
     platform: linux/amd64
     build:
@@ -7,10 +6,11 @@ services:
       dockerfile: ./docker/Dockerfile
     container_name: afyacall-doctor
     working_dir: /var/www/html
-    image: twiga.afyacall.co.tz:5000/afyacall_doctor:1.0.1
+    image: localhost:5000/afyacall_doctor:1.0.2
     volumes:
       - vendor_data:/var/www/html/vendor
       - ./:/var/www/html
+
     environment:
       APP_NAME: ${APP_NAME:-AfyaCall}
       APP_ENV: ${APP_ENV:-local}
@@ -20,8 +20,8 @@ services:
       DB_CONNECTION: ${DB_CONNECTION:-mysql}
       DB_HOST: ${DB_HOST:-192.168.1.11}
       DB_PORT: ${DB_PORT:-3306}
-      DB_DATABASE: ${DB_DATABASE:-afyacalltestdb}
-      DB_USERNAME: ${DB_USERNAME:-rm_db}
+      DB_DATABASE: ${DB_DATABASE:-doctorproduction}
+      DB_USERNAME: ${DB_USERNAME:-derrickdb}
       DB_PASSWORD: ${DB_PASSWORD}
       BROADCAST_DRIVER: ${BROADCAST_DRIVER:-log}
       CACHE_DRIVER: ${CACHE_DRIVER:-file}
@@ -34,16 +34,15 @@ services:
     networks:
       - afyacall_doctor_network
 
-  # Nginx service with SSL
   nginx:
     platform: linux/amd64
-    image: twiga.afyacall.co.tz:5000/afycall_core_nginx
+    image: localhost:5000/afycall_core_nginx
     build:
       context: .
       dockerfile: ./docker/nginx/Dockerfile
-    container_name: core_nginx
+    container_name: core_nginx_doctor
     ports:
-      - "5672:443"   # SSL port, 5672
+      - "5674:443"
     volumes:
       - ./:/var/www/html
       - vendor_data:/var/www/html/vendor
