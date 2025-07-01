@@ -1,0 +1,20 @@
+[req]
+default_bits       = 2048
+distinguished_name = req_distinguished_name
+req_extensions     = req_ext
+prompt             = no
+
+[req_distinguished_name]
+C  = TZ
+ST = Dar es Salaam
+L  = Dar es Salaam
+O  = Afyacall Company Ltd
+OU = IT
+CN = *.afyacall.co.tz
+emailAddress = security@afyacall.co.tz
+
+[req_ext]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = *.afyacall.co.tz
