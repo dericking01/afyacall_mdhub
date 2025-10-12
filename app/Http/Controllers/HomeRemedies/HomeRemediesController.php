@@ -9,9 +9,11 @@ use App\Model\Symptom;
 use App\Model\Region;
 use App\Model\Prescription;
 use App\Model\ChiefComplaint;
+use App\Model\IcdDiagnosis;
 use Illuminate\Support\Facades\Auth;
 use Pnlinh\InfobipSms\Facades\InfobipSms;
 use App\Helpers\SmsHelper;
+
 
 class HomeRemediesController extends Controller
 {
@@ -27,7 +29,9 @@ class HomeRemediesController extends Controller
         $chiefComplaints = ChiefComplaint::all();
         $regions = Region::all()->pluck('name','id');
         $patientnumber = "AC-".Patient::getNextPatientNumber();
-        return view('home_remedies.create',compact('patients','symptoms','regions','patientnumber','chiefComplaints'));
+        // ICD list
+        $icdDiagnoses = IcdDiagnosis::orderBy('code')->get();
+        return view('home_remedies.create',compact('patients','symptoms','regions','patientnumber','chiefComplaints','icdDiagnoses'));
     }
 
     public function create_patient(Request $request){
@@ -56,7 +60,6 @@ class HomeRemediesController extends Controller
     }
 
     public function new_remedies(Request $request){
-  
         $request->validate([
             'patient_id' => 'required'
         ]);
@@ -77,6 +80,7 @@ class HomeRemediesController extends Controller
        $remedies->dd = $request->dd;
        $remedies->cheif_complaint = $request->cheif_complaint;
        $remedies->prov_diagnos = $request->prov_diagnos;
+       $remedies->icd_diagnosis_id = $request->icd_diagnosis_id; // <-- new field icd_diagnosis_id
        $remedies->conclusion = $request->conclusion;
        $remedies->medication_status = $request->medication_status;
        $remedies->medication_name = $request->medication_name;
@@ -84,16 +88,6 @@ class HomeRemediesController extends Controller
        $remedies->save();
 
 
-       try {
-            $patient = Patient::find($request->patient_id);
-            $messagesent = "Your Afyacall Number is ". $patient->pat_no;
-            $contactfilter = str_pad(substr($patient->phone,1),12,"255", STR_PAD_LEFT);
-            $smsHelper = new SmsHelper();
-            $res = $smsHelper->sendSms($contactfilter, $messagesent);
-       } catch (\Throwable $th) {
-           //throw $th;
-           return redirect()->back()->with('success','Fail to send sms to a patient');
-       }
       
 
 

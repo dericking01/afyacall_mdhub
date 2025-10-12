@@ -24,4 +24,10 @@ class Prescription extends Model
     {
         return $this->belongsToMany(Symptom::class, 'prescription_symptoms');
     }
+
+    public function icdDiagnosis()
+    {
+        return $this->belongsTo(IcdDiagnosis::class, 'icd_diagnosis_id');
+    }
+
 }

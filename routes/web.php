@@ -10,6 +10,7 @@ Auth::routes(['register' => false]);
 Route::get('change_password', 'Auth\ChangePasswordController@showChangePasswordForm')->name('auth.change_password');
 Route::patch('change_password', 'Auth\ChangePasswordController@changePassword')->name('auth.change_password');
 
+
 Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/home/dashboard','HomeController@dashboard')->name('dashboard');
@@ -74,6 +75,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
     Route::post('consultation/create-patient', 'HomeRemedies\HomeRemediesController@create_patient')->name('home.create_patient');
     Route::post('consultation/patient-data', 'HomeRemedies\HomeRemediesController@patient_data')->name('home.patient_data');
     Route::post('consultation/new-consultation', 'HomeRemedies\HomeRemediesController@new_remedies')->name('home.new_remedies');
+    Route::get('/icd/search','HomeRemedies\IcdDiagnosisController@search')->name('home.icd_search');
+
 
     //Calendar
     Route::get('calendar', 'Calendar\CalendarController@index')->name('calendar');

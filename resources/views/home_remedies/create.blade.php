@@ -151,8 +151,18 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group-custom">
+                                        <label for="icd_diagnosis_id">ICD-10 Diagnosis</label>
+                                        <select id="icd_diagnosis_id" name="icd_diagnosis_id" class="form-control" style="width: 100%;">
+                                            <!-- options loaded dynamically -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <br>
+
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group-custom">
@@ -313,7 +323,6 @@
                                         </div>
                                     </div>
                                 </div>
-
 
                             </div>
 
@@ -534,5 +543,43 @@
                 });
             }
         });
+
+       
+
     </script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#icd_diagnosis_id').select2({
+                placeholder: 'Search ICD-10 Diagnosis...',
+                ajax: {
+                    url: '{{ route("admin.home.icd_search") }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return { q: params.term };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.results
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 2,
+                width: '100%',
+            });
+        });
+</script>
+
+
 @endsection
