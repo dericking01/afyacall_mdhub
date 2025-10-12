@@ -43,6 +43,12 @@
 					  <h6>{{ $prescriptions->cheif_complaint }}</h6>
                                         </dd>
                                         <dt class="col-md-6">
+                                            <h6>ICD-10 DIAGNOSIS</h6>
+                                        </dt>
+                                        <dd class="col-md-6">
+                      <h6>{{ optional($prescriptions->icdDiagnosis)->description ?? 'NONE' }}</h6>
+                                        </dd>
+                                        <dt class="col-md-6">
                                             <h6>Provisional Diagnosis</h6>
                                         </dt>
 					<dd class="col-md-6">

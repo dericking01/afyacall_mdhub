@@ -24,13 +24,14 @@ class HomeRemediesController extends Controller
     }
 
     public function create(){
+        session()->regenerateToken();
         $patients = Patient::with('region','district')->get();
         $symptoms = Symptom::all();
         $chiefComplaints = ChiefComplaint::all();
         $regions = Region::all()->pluck('name','id');
         $patientnumber = "AC-".Patient::getNextPatientNumber();
         // ICD list
-        $icdDiagnoses = IcdDiagnosis::orderBy('code')->get();
+        $icdDiagnoses = IcdDiagnosis::orderBy('code')->take(20)->get();
         return view('home_remedies.create',compact('patients','symptoms','regions','patientnumber','chiefComplaints','icdDiagnoses'));
     }
 
