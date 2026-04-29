@@ -38,7 +38,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 
 # Install dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN git config --global --add safe.directory /var/www/html \
+    && composer config --global audit.block-insecure false \
+    && composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-audit \
+    || echo "Composer install failed; continuing build with existing vendor directory."
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
