@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Model\UserStatusActivity;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Socialite;
 use Auth;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -52,6 +54,24 @@ class LoginController extends Controller
         $user = User::findOrFail(Auth::user()->id);
         $user->status = 1;
         $user->save();
+
+        try {
+            UserStatusActivity::create([
+                'user_id' => $user->id,
+                'new_status' => 1,
+                'activity' => 'logout',
+                'changed_by' => $user->id,
+                'source' => 'auth_logout',
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ]);
+        } catch (\Throwable $th) {
+            Log::error('Failed to store auth logout activity log', [
+                'message' => $th->getMessage(),
+                'user_id' => $user->id,
+            ]);
+        }
+
         $this->guard()->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

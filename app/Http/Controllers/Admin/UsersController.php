@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\SmsHelper;
+use App\Model\UserStatusActivity;
 use App\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
@@ -150,7 +151,15 @@ class UsersController extends Controller
 
     public function userChangeStatus(Request $request)
     {
+        $request->validate([
+            'status' => 'required|in:0,1',
+        ]);
+
         $user = User::find(Auth::id());
+        if (!$user) {
+            return response()->json('User not found', 404);
+        }
+
         Log::info("User changing status:", json_decode(json_encode($user), true));
 
         $number = $user->phone;
@@ -181,6 +190,7 @@ class UsersController extends Controller
             if ($responseBody === $expectedResponse) {
                 $user->status = $newStatus;
                 $user->save();
+                $this->logStatusActivity($user, (int) $newStatus, 'self');
 
                 $this->sendnotification($number);
 
@@ -207,6 +217,11 @@ class UsersController extends Controller
 
     public function adminChangeStatus(Request $request)
     {
+        $request->validate([
+            'id' => 'required|exists:users,id',
+            'status' => 'required|in:0,1',
+        ]);
+
         $user = User::find($request->id);
         $number = $user->phone;
         $doctor_id = $user->id;
@@ -227,6 +242,7 @@ class UsersController extends Controller
                 //update user status
                 $user->status = 0;
                 $user->save();
+                $this->logStatusActivity($user, 0, 'admin');
 
                 $this->sendnotification($number);
 
@@ -252,13 +268,36 @@ class UsersController extends Controller
                 //update user status
                 $user->status = 1;
                 $user->save();
+                $this->logStatusActivity($user, 1, 'admin');
 
                 //send notification
                 $this->sendnotification($number);
 
                 return response()->json('success 1');
             } catch (\Throwable $th) {
+                return response()->json($th->getMessage(), 500);
             }
+        }
+    }
+
+    protected function logStatusActivity(User $user, $status, $source = null)
+    {
+        try {
+            UserStatusActivity::create([
+                'user_id' => $user->id,
+                'new_status' => (int) $status,
+                'activity' => ((int) $status) === 0 ? 'login' : 'logout',
+                'changed_by' => Auth::id(),
+                'source' => $source,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
+        } catch (\Throwable $th) {
+            Log::error('Failed to store user status activity log', [
+                'message' => $th->getMessage(),
+                'user_id' => $user->id,
+                'status' => $status,
+            ]);
         }
     }
 

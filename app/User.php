@@ -68,4 +68,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne('App\Model\Doctor', 'user_id', 'id');
     }
+
+    public function statusActivities()
+    {
+        return $this->hasMany('App\Model\UserStatusActivity', 'user_id', 'id');
+    }
 }
