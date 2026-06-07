@@ -170,7 +170,7 @@ class UsersController extends Controller
 
         try {
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('POST', 'http://192.168.1.49:80/afyacall.php', [
+            $response = $client->request('POST', 'http://192.168.1.46:80/afyacall.php', [
                 'verify' => false,
                 'query' => [
                     'phone' => $number,
@@ -228,7 +228,7 @@ class UsersController extends Controller
         if ($request->status == 0) {
             try {
                 $client = new \GuzzleHttp\Client();
-                $response = $client->request('POST', 'http://192.168.1.49:80/afyacall.php', [
+                $response = $client->request('POST', 'http://192.168.1.46:80/afyacall.php', [
                     'query' => [
                         'phone' => $number,
                         'status' => 1,
@@ -253,7 +253,7 @@ class UsersController extends Controller
         } else if ($request->status == 1) {
             try {
                 $client = new \GuzzleHttp\Client();
-                $response = $client->request('POST', 'http://192.168.1.49:80/afyacall.php', [
+                $response = $client->request('POST', 'http://192.168.1.46:80/afyacall.php', [
 
                     'query' => [
                         'phone' => $number,
