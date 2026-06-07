@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\UpdateUserPassword::class,
+        Commands\SyncOfflineUsersToAfyacall::class,
     ];
 
     /**
