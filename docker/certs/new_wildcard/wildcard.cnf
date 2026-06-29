@@ -1,0 +1,21 @@
+[req]
+default_bits = 4096
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
+
+[dn]
+C = TZ
+ST = Dar es Salaam
+L = Dar es Salaam
+O = AfyaCall
+OU = IT
+CN = *.afyacall.co.tz
+
+[req_ext]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = *.afyacall.co.tz
+DNS.2 = afyacall.co.tz
